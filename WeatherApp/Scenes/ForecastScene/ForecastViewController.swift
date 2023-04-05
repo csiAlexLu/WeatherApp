@@ -10,12 +10,6 @@ import Combine
 
 class ForecastViewController: UIViewController, BaseViewController {
 
-    enum Constants {
-        static let leadingInset: CGFloat = 20
-        static let cellHeigth: CGFloat = 90
-        static let contentInset = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
-    }
-
     private let forecastCollectionView: UICollectionView = {
         let collection = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         collection.register(WeatherCell.self, forCellWithReuseIdentifier: WeatherCell.reuseID)
@@ -42,29 +36,14 @@ class ForecastViewController: UIViewController, BaseViewController {
         super.viewDidLoad()
 
         prepareUI()
-        prepareCollectionView()
-        addConstratints()
         addObservers()
     }
 
     private func prepareUI() {
-        view.backgroundColor = .clear
-    }
-
-    private func prepareCollectionView() {
-        view.addSubview(forecastCollectionView)
-
+        forecastCollectionView.add(to: view)
+        forecastCollectionView.pin()
         forecastCollectionView.delegate = self
         forecastCollectionView.dataSource = self
-    }
-    
-    private func addConstratints() {
-        NSLayoutConstraint.activate([
-            forecastCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            forecastCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            forecastCollectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            forecastCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
     }
 
     private func addObservers() {
@@ -116,5 +95,15 @@ extension ForecastViewController: UICollectionViewDelegateFlowLayout {
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         forecastCollectionView.collectionViewLayout.invalidateLayout()
+    }
+}
+
+extension ForecastViewController {
+    enum Constants {
+        static let cityLabelInsets = UIEdgeInsets(top: 15, left: 20, right: 20)
+        static let countryLabelInsets = UIEdgeInsets(left: 20, right: 20)
+        static let leadingInset: CGFloat = 20
+        static let cellHeigth: CGFloat = 90
+        static let contentInset = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
     }
 }
