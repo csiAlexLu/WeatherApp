@@ -25,14 +25,6 @@ class MainViewController: UIViewController, BaseViewController {
         return bar
     }()
 
-    enum Constants {
-        static let leadingInset: CGFloat = 20
-        static let trailingInset: CGFloat = -20
-        static let locationInfoHeight: CGFloat = 150
-        static let forecastViewTopInset: CGFloat = 20
-        static let bgColor = UIColor.white
-    }
-
     var viewModel: MainViewModel
     private var locationVC = LocationInfoViewController(viewModel: LocationInfoViewModel())
     private var forecastVC = ForecastViewController(viewModel: ForecastViewModel())
@@ -84,21 +76,17 @@ class MainViewController: UIViewController, BaseViewController {
     }
 
     private func addConstratints() {
-        NSLayoutConstraint.activate([
-            searchBar.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Constants.leadingInset),
-            searchBar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: Constants.trailingInset),
-            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.forecastViewTopInset),
+        searchBar
+            .pin(edges: [.left, .right, .top], to: view.safeAreaLayoutGuide, with: Constants.searchBarInsets)
 
-            locationVC.view.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Constants.leadingInset),
-            locationVC.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: Constants.trailingInset),
-            locationVC.view.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
-            locationVC.view.heightAnchor.constraint(equalToConstant: Constants.locationInfoHeight),
+        locationVC.view
+            .toBottom(of: searchBar)
+            .pin(edges: [.left, .right], with: Constants.locationInfoInsets)
+            .height(Constants.locationInfoHeight)
 
-            forecastVC.view.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            forecastVC.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            forecastVC.view.topAnchor.constraint(equalTo: locationVC.view.bottomAnchor, constant: Constants.forecastViewTopInset),
-            forecastVC.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
+        forecastVC.view
+            .toBottom(of: locationVC.view, with: Constants.topInset)
+            .pin(edges: [.left, .right, .bottom])
     }
 
     private func addObservers() {
@@ -117,4 +105,12 @@ extension MainViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         viewModel.searchText = searchText
     }
+}
+
+enum Constants {
+    static let searchBarInsets = UIEdgeInsets(left: 20, right: 20)
+    static let locationInfoInsets = UIEdgeInsets(top: 10, left: 20, right: 20)
+    static let locationInfoHeight: CGFloat = 150
+    static let topInset: CGFloat = 20
+    static let bgColor = UIColor.white
 }
