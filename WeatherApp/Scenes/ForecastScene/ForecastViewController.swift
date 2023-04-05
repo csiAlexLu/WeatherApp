@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-class ForecastViewController: UIViewController {
+class ForecastViewController: UIViewController, BaseViewController {
 
     enum Constants {
         static let leadingInset: CGFloat = 20
@@ -25,9 +25,19 @@ class ForecastViewController: UIViewController {
         return collection
     }()
 
-    var viewModel = ForecastViewModel()
+    var viewModel: ForecastViewModel
     private var subscriptions: Set<AnyCancellable> = []
-
+    
+    required init(viewModel: ForecastViewModel) {
+        self.viewModel = viewModel
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 

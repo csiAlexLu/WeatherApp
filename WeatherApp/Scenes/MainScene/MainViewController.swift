@@ -8,7 +8,14 @@
 import UIKit
 import Combine
 
-class MainViewController: UIViewController {
+protocol BaseViewController {
+    associatedtype ViewModelType
+    var viewModel: ViewModelType { get set }
+
+    init(viewModel: ViewModelType)
+}
+
+class MainViewController: UIViewController, BaseViewController {
 
     private let searchBar: UISearchBar = {
         let bar = UISearchBar()
@@ -26,12 +33,12 @@ class MainViewController: UIViewController {
         static let bgColor = UIColor.white
     }
 
-    private var viewModel: MainViewModel
-    private var locationVC = LocationInfoViewController()
-    private var forecastVC = ForecastViewController()
+    var viewModel: MainViewModel
+    private var locationVC = LocationInfoViewController(viewModel: LocationInfoViewModel())
+    private var forecastVC = ForecastViewController(viewModel: ForecastViewModel())
     private var subscriptions: Set<AnyCancellable> = []
 
-    init(viewModel: MainViewModel) {
+    required init(viewModel: MainViewModel) {
         self.viewModel = viewModel
 
         super.init(nibName: nil, bundle: nil)

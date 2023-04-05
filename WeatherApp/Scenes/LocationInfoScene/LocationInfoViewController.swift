@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-class LocationInfoViewController: UIViewController {
+class LocationInfoViewController: UIViewController, BaseViewController {
 
     enum Constants {
         static let leadingInset: CGFloat = 20
@@ -76,8 +76,18 @@ class LocationInfoViewController: UIViewController {
         return label
     }()
 
-    var viewModel = LocationInfoViewModel()
+    var viewModel: LocationInfoViewModel
     private var subscriptions: Set<AnyCancellable> = []
+
+    required init(viewModel: LocationInfoViewModel) {
+        self.viewModel = viewModel
+
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
