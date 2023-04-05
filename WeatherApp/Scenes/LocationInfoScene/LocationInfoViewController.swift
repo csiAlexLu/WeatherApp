@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class LocationInfoViewController: UIViewController {
 
@@ -24,7 +25,7 @@ class LocationInfoViewController: UIViewController {
         static let additionalInfoFont = UIFont.systemFont(ofSize: 15.0, weight: .regular)
 
         static let bgColor = UIColor.UI.purpleMain
-        static let borderColor = UIColor.UI.purpleMain
+        static let borderColor = UIColor.UI.purpleBorder
     }
 
     private let citylabel: UILabel = {
@@ -32,7 +33,6 @@ class LocationInfoViewController: UIViewController {
 
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .white
-        label.text = "Minsk"
         label.font = Constants.mainInfoFont
         label.textAlignment = .center
         label.adjustsFontSizeToFitWidth = true
@@ -45,7 +45,6 @@ class LocationInfoViewController: UIViewController {
 
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .white
-        label.text = "Belarus"
         label.font = Constants.additionalInfoFont
         label.textAlignment = .center
         label.adjustsFontSizeToFitWidth = true
@@ -58,7 +57,6 @@ class LocationInfoViewController: UIViewController {
 
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .white
-        label.text = "14:09"
         label.font = Constants.mainInfoFont
         label.textAlignment = .center
         label.adjustsFontSizeToFitWidth = true
@@ -71,13 +69,15 @@ class LocationInfoViewController: UIViewController {
 
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .white
-        label.text = "30.03.2023"
         label.font = Constants.additionalInfoFont
         label.textAlignment = .center
         label.adjustsFontSizeToFitWidth = true
 
         return label
     }()
+
+    var viewModel = LocationInfoViewModel()
+    private var subscriptions: Set<AnyCancellable> = []
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -93,6 +93,7 @@ class LocationInfoViewController: UIViewController {
         prepareUI()
         addViews()
         addConstratints()
+        addObservers()
     }
 
     private func prepareUI() {
@@ -128,5 +129,34 @@ class LocationInfoViewController: UIViewController {
             datelabel.topAnchor.constraint(equalTo: timelabel.bottomAnchor),
             datelabel.heightAnchor.constraint(equalToConstant: Constants.additionalInfoHeight),
         ])
+    }
+
+    private func addObservers() {
+        viewModel.$uiModel
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] uiModel in
+                guard let self else { return }
+                if let uiModel {
+                    self.citylabel.text = uiModel.city
+                    self.countylabel.text = uiModel.country
+                    self.timelabel.text = uiModel.time
+                    self.datelabel.text = uiModel.date
+                } else {
+                    self.clearView()
+                }
+
+            }
+            .store(in: &subscriptions)
+    }
+
+    private func clearView() {
+        self.citylabel.text = ""
+        self.countylabel.text = ""
+        self.timelabel.text = ""
+        self.datelabel.text = ""
+    }
+
+    func setWeather(_ weather: Weather?) {
+        viewModel.setWeather(weather)
     }
 }

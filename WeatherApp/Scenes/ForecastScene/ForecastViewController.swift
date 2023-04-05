@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class ForecastViewController: UIViewController {
 
@@ -24,7 +25,8 @@ class ForecastViewController: UIViewController {
         return collection
     }()
 
-    private let viewModel = ForecastViewModel()
+    var viewModel = ForecastViewModel()
+    private var subscriptions: Set<AnyCancellable> = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,6 +34,7 @@ class ForecastViewController: UIViewController {
         prepareUI()
         prepareCollectionView()
         addConstratints()
+        addObservers()
     }
 
     private func prepareUI() {
@@ -52,6 +55,20 @@ class ForecastViewController: UIViewController {
             forecastCollectionView.topAnchor.constraint(equalTo: view.topAnchor),
             forecastCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+    }
+
+    private func addObservers() {
+        viewModel.$forecast
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self else { return }
+                self.forecastCollectionView.reloadData()
+            }
+            .store(in: &subscriptions)
+    }
+
+    func setWeather(_ weather: Weather?) {
+        viewModel.setWeather(weather)
     }
 }
 

@@ -7,10 +7,10 @@
 
 import UIKit
 
-struct WeatherCellUIModel {
+struct WeatherCellUIModel: Equatable {
     var maxMinTemp: String
     var date: String
-    var image: UIImage
+    var image: String
 }
 
 class WeatherCell: UICollectionViewCell {
@@ -121,6 +121,6 @@ class WeatherCell: UICollectionViewCell {
     func setupCell(uiModel: WeatherCellUIModel) {
         dateLabel.text = uiModel.date
         maxMinLabel.text = uiModel.maxMinTemp
-        imageView.image = uiModel.image
+        imageView.downloaded(from: uiModel.image)
     }
 }
