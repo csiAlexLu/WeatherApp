@@ -17,10 +17,10 @@ class MainViewModel {
     @Published private(set) var weather: Weather?
     @Published var searchText: String = String()
 
-    private var weatherService: WeatherService
+    private var weatherService: WeatherServiceProtocol
     private var subscriptions: Set<AnyCancellable> = []
 
-    init(weatherService: WeatherService) {
+    init(weatherService: WeatherServiceProtocol) {
         self.weatherService = weatherService
         addObservers()
     }
@@ -31,10 +31,18 @@ class MainViewModel {
             .removeDuplicates()
             .sink { [weak self] inputText in
                 guard let self else { return }
-                self.weatherService.fetchWeather(for: inputText) { weather in
-                    self.weather = weather
+                guard !inputText.isEmpty else {
+                    self.weather = nil
+                    return
                 }
+                self.fetchWeather(for: inputText)
             }
             .store(in: &subscriptions)
+    }
+
+    private func fetchWeather(for city: String) {
+        weatherService.fetchWeather(for: city) { [weak self] weather, error  in
+            self?.weather = weather
+        }
     }
 }

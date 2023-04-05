@@ -22,8 +22,8 @@ class MainViewController: UIViewController {
         static let leadingInset: CGFloat = 20
         static let trailingInset: CGFloat = -20
         static let locationInfoHeight: CGFloat = 150
-        static let forecastViewTopInset: CGFloat = 50
-        static let bgColor = UIColor.UI.purpleMain
+        static let forecastViewTopInset: CGFloat = 20
+        static let bgColor = UIColor.white
     }
 
     private var viewModel: MainViewModel

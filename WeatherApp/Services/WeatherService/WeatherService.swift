@@ -8,10 +8,10 @@
 import Foundation
 
 protocol WeatherServiceProtocol {
-    func fetchWeather(for city: String, completion: @escaping (Weather?) -> Void)
+    func fetchWeather(for city: String, completion: @escaping (Weather?, WeatherService.ForecastError?) -> Void)
 }
 
-class WeatherService: WeatherServiceProtocol{
+class WeatherService: WeatherServiceProtocol {
 
     enum ForecastError: Error {
         case invalidServerResponse
@@ -42,17 +42,19 @@ class WeatherService: WeatherServiceProtocol{
         return components
     }
 
-    func fetchWeather(for city: String, completion: @escaping (Weather?) -> Void) {
+    func fetchWeather(for city: String, completion: @escaping (Weather?, ForecastError?) -> Void) {
         let forecast = forecastComponents(city: city)
 
-        URLSession.shared.dataTask(with: forecast.url!) { data, _, error in
-            guard let data else { return }
+        URLSession.shared.dataTask(with: forecast.url!) { data, _ , _ in
+            guard let data else {
+                completion(nil, .invalidServerResponse)
+                return
+            }
             do {
                 let weather = try JSONDecoder().decode(Weather.self, from: data)
-                completion(weather)
-            } catch let error as NSError {
-                print("Failed to decode json, error: \(error)")
-                completion(nil)
+                completion(weather, nil)
+            } catch {
+                completion(nil, .jsonDecodingFailed)
             }
         }
         .resume()
