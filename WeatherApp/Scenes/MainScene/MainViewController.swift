@@ -14,7 +14,7 @@ class MainViewController: UIViewController {
         static let trailingInset: CGFloat = -20
         static let locationInfoHeight: CGFloat = 150
         static let forecastViewTopInset: CGFloat = 50
-        static let backgroundColor = UIColor(named: "purpleMain")!.withAlphaComponent(0.8)
+        static let bgColor = UIColor.UI.purpleMain.withAlphaComponent(0.8)
     }
 
     private var locationVC = LocationInfoViewController()
@@ -29,7 +29,7 @@ class MainViewController: UIViewController {
     }
 
     private func prepareUI() {
-        view.backgroundColor = Constants.backgroundColor
+        view.backgroundColor = Constants.bgColor
     }
 
     private func addChildViewControllers() {

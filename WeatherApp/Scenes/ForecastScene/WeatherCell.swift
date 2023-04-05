@@ -30,8 +30,8 @@ class WeatherCell: UICollectionViewCell {
         static let tempFont = UIFont.systemFont(ofSize: 20.0, weight: .semibold)
         static let dateFont = UIFont.systemFont(ofSize: 15.0, weight: .regular)
 
-        static let purpleMain = UIColor(named: "purpleMain")!
-        static let purpleBorder = UIColor(named: "purpleBorder")!
+        static let bgColor = UIColor.UI.purpleMain
+        static let borderColor = UIColor.UI.purpleBorder
     }
 
     private let dateLabel: UILabel = {
@@ -78,7 +78,7 @@ class WeatherCell: UICollectionViewCell {
 
         layer.cornerRadius = Constants.cornerRadius
         layer.borderWidth = Constants.borderWidth
-        layer.borderColor = Constants.purpleBorder.cgColor
+        layer.borderColor = Constants.borderColor.cgColor
     }
 
     override func prepareForReuse() {
@@ -89,7 +89,7 @@ class WeatherCell: UICollectionViewCell {
     }
 
     private func prepareUI() {
-        backgroundColor = Constants.purpleMain
+        backgroundColor = Constants.bgColor
         imageView.translatesAutoresizingMaskIntoConstraints = false 
     }
 

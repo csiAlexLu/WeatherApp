@@ -9,7 +9,6 @@ import UIKit
 
 class LocationInfoViewController: UIViewController {
 
-    // MARK: - Constants
     enum Constants {
         static let leadingInset: CGFloat = 20
         static let trailingInset: CGFloat = -20
@@ -24,11 +23,10 @@ class LocationInfoViewController: UIViewController {
         static let mainInfoFont = UIFont.systemFont(ofSize: 30.0, weight: .semibold)
         static let additionalInfoFont = UIFont.systemFont(ofSize: 15.0, weight: .regular)
 
-        static let purpleMain = UIColor(named: "purpleMain")!
-        static let purpleBorder = UIColor(named: "purpleBorder")!
+        static let bgColor = UIColor.UI.purpleMain
+        static let borderColor = UIColor.UI.purpleMain
     }
 
-    // MARK: - UI
     private let citylabel: UILabel = {
         let label = UILabel()
 
@@ -81,25 +79,26 @@ class LocationInfoViewController: UIViewController {
         return label
     }()
 
-    // MARK: - Life cycle
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
         view.layer.cornerRadius = Constants.cornerRadius
         view.layer.borderWidth = Constants.borderWidth
-        view.layer.borderColor = Constants.purpleBorder.cgColor
+        view.layer.borderColor = Constants.borderColor.cgColor
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = Constants.purpleMain
-
+        prepareUI()
         addViews()
         addConstratints()
     }
 
-    // MARK: - Private functions
+    private func prepareUI() {
+        view.backgroundColor = Constants.bgColor
+    }
+
     private func addViews() {
         view.addSubview(citylabel)
         view.addSubview(countylabel)
