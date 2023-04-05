@@ -13,22 +13,26 @@ struct Weather: Codable {
 }
 
 struct Location: Codable {
-    let name, country: String
+    let name: String
+    let country: String
     let localtimeEpoch: Int
     let localtime: String
+    let timeZoneID: String
 
     enum CodingKeys: String, CodingKey {
-        case name, country
+        case name
+        case country
         case localtimeEpoch = "localtime_epoch"
         case localtime
+        case timeZoneID = "tz_id"
     }
 }
 
 struct Forecast: Codable {
-    let forecastday: [Forecastday]
+    let forecastday: [ForecastDay]
 }
 
-struct Forecastday: Codable {
+struct ForecastDay: Codable {
     let date: String
     let dateEpoch: Int
     let day: Day
@@ -41,11 +45,21 @@ struct Forecastday: Codable {
 }
 
 struct Day: Codable {
-    let maxtempC, maxtempF, mintempC, mintempF: Double
+    let maxtempC: Double
+    let maxtempF: Double
+    let mintempC: Double
+    let mintempF: Double
+    let condition: Condition
+
     enum CodingKeys: String, CodingKey {
         case maxtempC = "maxtemp_c"
         case maxtempF = "maxtemp_f"
         case mintempC = "mintemp_c"
         case mintempF = "mintemp_f"
+        case condition
     }
+}
+
+struct Condition: Codable {
+    let icon: String
 }
